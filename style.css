@@ -1,53 +1,139 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
-body { background-color: #f3f4f6; color: #1f2937; padding: 20px; }
+/* --- CSS Proměnné pro moderní vzhled --- */
+:root {
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --bg-body: #f8fafc;
+  --bg-surface: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --success: #10b981;
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
 
-/* Hlavička */
-header { max-width: 1200px; margin: 0 auto 30px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-.header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px; }
-.header-top h1 { font-size: 1.8rem; color: #111827; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); }
+body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.mt-4 { margin-top: 1rem; }
+.w-full { width: 100%; }
 
-/* Vyhledávání a Filtry */
+/* --- Hlavička (Sticky & Glassmorphism) --- */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 20px;
+  margin-bottom: 40px;
+}
+.header-container { max-width: 1200px; margin: 0 auto; }
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.header-top h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
+.header-top h1 span { color: var(--primary); }
+
+/* --- Vyhledávání a Filtry --- */
 .controls-bar { display: flex; flex-direction: column; gap: 15px; }
-.search-box input { width: 100%; padding: 12px 15px; font-size: 1rem; border: 1px solid #d1d5db; border-radius: 8px; outline: none; transition: border-color 0.2s; }
-.search-box input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+@media(min-width: 768px) {
+  .controls-bar { flex-direction: row; align-items: center; justify-content: space-between; }
+  .search-box { width: 400px; }
+}
 
-.category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
-.filter-btn { padding: 8px 16px; border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 20px; cursor: pointer; color: #4b5563; font-weight: 500; transition: all 0.2s; }
-.filter-btn:hover { background: #e5e7eb; }
-.filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+.search-box { position: relative; width: 100%; }
+.search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.search-box input {
+  width: 100%; padding: 12px 16px 12px 42px;
+  font-size: 0.95rem; background: var(--bg-body);
+  border: 1px solid var(--border-color); border-radius: 9999px;
+  outline: none; transition: all 0.2s ease;
+}
+.search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); background: var(--bg-surface); }
 
-/* Tlačítka a formuláře */
-.btn-auth { background: #1f2937; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-.btn-primary { background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-.btn-secondary { background: #e5e7eb; color: #374151; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+.category-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 8px 18px; font-size: 0.9rem; font-weight: 500;
+  border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-muted);
+  border-radius: 9999px; cursor: pointer; transition: all 0.2s ease;
+}
+.filter-btn:hover { border-color: #cbd5e1; color: var(--text-main); }
+.filter-btn.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
 
-/* Admin Panel */
-.admin-panel { max-width: 1200px; margin: 0 auto 30px auto; background: white; padding: 25px; border-radius: 12px; border-left: 5px solid #10b981; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-.admin-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
-.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-.form-row input, .form-row select { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; }
-textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 15px; }
+/* --- Tlačítka --- */
+button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; transition: all 0.2s ease; outline: none; }
+.btn-auth { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 9999px; font-weight: 500; cursor: pointer; }
+.btn-auth:hover { background: var(--bg-body); color: var(--text-main); }
+.btn-primary { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-primary:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid transparent; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+.btn-secondary:hover { background: #e2e8f0; }
 
-/* Grid a Karty */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-.card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s; }
-.card:hover { transform: translateY(-5px); }
-.card img { width: 100%; height: 220px; object-fit: cover; }
-.card-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
-.card-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; position: relative; }
-.card-title { font-size: 1.25rem; font-weight: bold; color: #111827; }
-.card-desc { color: #4b5563; font-size: 0.95rem; line-height: 1.5; flex-grow: 1; }
-.card-price { font-size: 1.25rem; font-weight: 800; color: #3b82f6; margin-top: 10px; }
+/* --- Admin Panel Formuláře --- */
+.admin-panel {
+  background: var(--bg-surface); padding: 30px; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md); border-top: 4px solid var(--primary); margin-bottom: 40px;
+}
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.admin-header h2 { font-size: 1.25rem; font-weight: 700; }
+.btn-logout { background: transparent; border: none; color: var(--danger); font-weight: 600; cursor: pointer; }
+.btn-logout:hover { text-decoration: underline; }
+
+.form-row { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
+.form-row > * { flex: 1; min-width: 200px; }
+.input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+.input-group input, .input-group select, .input-group textarea {
+  width: 100%; padding: 10px 14px; font-size: 0.95rem; border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm); outline: none; transition: all 0.2s; background: #f8fafc;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); background: #fff; }
+.file-input { padding: 8px !important; background: #fff !important; cursor: pointer; }
+
+/* --- Grid a Karty --- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding-bottom: 60px; }
+.card {
+  background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+  display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: #cbd5e1; }
+.card-img-wrapper { position: relative; width: 100%; height: 220px; overflow: hidden; background: #f1f5f9; }
+.card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .card-img-wrapper img { transform: scale(1.05); }
+.card-badge { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); padding: 6px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; color: var(--text-main); box-shadow: var(--shadow-sm); }
+.card-body { padding: 24px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+.card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+.card-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-price { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-top: auto; }
 
 /* Admin akce v kartě */
-.card-actions { display: flex; gap: 10px; padding: 0 20px 20px 20px; }
-.btn-edit { flex: 1; background: #f59e0b; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;}
-.btn-delete { flex: 1; background: #ef4444; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;}
+.card-actions { display: flex; gap: 10px; padding: 0 24px 24px 24px; }
+.btn-edit { flex: 1; background: #f8fafc; color: var(--text-main); border: 1px solid var(--border-color); padding: 8px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+.btn-edit:hover { background: #e2e8f0; }
+.btn-delete { flex: 1; background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; padding: 8px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+.btn-delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
 
-/* Modals */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-.modal-content { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-.hidden { display: none !important; }
+/* --- Modals --- */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 1; transition: opacity 0.2s; }
+.modal.hidden { opacity: 0; pointer-events: none; }
+.modal-backdrop { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); }
+.modal-content { position: relative; background: var(--bg-surface); padding: 32px; border-radius: var(--radius-lg); width: 90%; max-width: 500px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); transform: translateY(0); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal.hidden .modal-content { transform: translateY(20px); }
+.modal-header h3 { font-size: 1.25rem; font-weight: 700; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; }
 
-@media(max-width: 600px) { .form-row { flex-direction: column; } }
+/* Loading State */
+.loading-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.spinner { width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
