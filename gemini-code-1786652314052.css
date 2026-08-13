@@ -1,0 +1,53 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+body { background-color: #f3f4f6; color: #1f2937; padding: 20px; }
+
+/* Hlavička */
+header { max-width: 1200px; margin: 0 auto 30px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px; }
+.header-top h1 { font-size: 1.8rem; color: #111827; }
+
+/* Vyhledávání a Filtry */
+.controls-bar { display: flex; flex-direction: column; gap: 15px; }
+.search-box input { width: 100%; padding: 12px 15px; font-size: 1rem; border: 1px solid #d1d5db; border-radius: 8px; outline: none; transition: border-color 0.2s; }
+.search-box input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+.category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.filter-btn { padding: 8px 16px; border: 1px solid #e5e7eb; background: #f9fafb; border-radius: 20px; cursor: pointer; color: #4b5563; font-weight: 500; transition: all 0.2s; }
+.filter-btn:hover { background: #e5e7eb; }
+.filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+/* Tlačítka a formuláře */
+.btn-auth { background: #1f2937; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+.btn-primary { background: #10b981; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+.btn-secondary { background: #e5e7eb; color: #374151; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+
+/* Admin Panel */
+.admin-panel { max-width: 1200px; margin: 0 auto 30px auto; background: white; padding: 25px; border-radius: 12px; border-left: 5px solid #10b981; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+.admin-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+.form-row input, .form-row select { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; }
+textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 15px; }
+
+/* Grid a Karty */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+.card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: flex; flex-direction: column; transition: transform 0.2s; }
+.card:hover { transform: translateY(-5px); }
+.card img { width: 100%; height: 220px; object-fit: cover; }
+.card-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+.card-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; position: relative; }
+.card-title { font-size: 1.25rem; font-weight: bold; color: #111827; }
+.card-desc { color: #4b5563; font-size: 0.95rem; line-height: 1.5; flex-grow: 1; }
+.card-price { font-size: 1.25rem; font-weight: 800; color: #3b82f6; margin-top: 10px; }
+
+/* Admin akce v kartě */
+.card-actions { display: flex; gap: 10px; padding: 0 20px 20px 20px; }
+.btn-edit { flex: 1; background: #f59e0b; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;}
+.btn-delete { flex: 1; background: #ef4444; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold;}
+
+/* Modals */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.hidden { display: none !important; }
+
+@media(max-width: 600px) { .form-row { flex-direction: column; } }

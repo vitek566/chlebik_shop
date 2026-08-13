@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profesionální Katalog</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Hlavička a ovládací panel -->
+  <header>
+    <div class="header-top">
+      <h1>Náš Katalog</h1>
+      <button id="admin-auth-btn" onclick="openLoginModal()" class="btn-auth">🔐 Prodejce</button>
+    </div>
+
+    <!-- Filtry a Vyhledávání pro zákazníky -->
+    <div class="controls-bar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="🔍 Hledat produkt podle názvu nebo popisu..." oninput="handleSearch()">
+      </div>
+      <div class="category-filters">
+        <button class="filter-btn active" data-cat="all" onclick="setCategory('all')">Vše</button>
+        <button class="filter-btn" data-cat="potraviny" onclick="setCategory('potraviny')">🥖 Potraviny</button>
+        <button class="filter-btn" data-cat="rybarske" onclick="setCategory('rybarske')">🎣 Rybářské potřeby</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ADMIN PANEL: Přidání nového produktu -->
+  <section id="admin-panel" class="admin-panel hidden">
+    <div class="admin-header">
+      <h2>➕ Přidat produkt do katalogu</h2>
+      <button onclick="logoutAdmin()" class="btn-logout">Odhlásit se</button>
+    </div>
+    <form id="add-product-form" onsubmit="handleAddProduct(event)">
+      <div class="form-row">
+        <input type="text" id="prod-title" placeholder="Název produktu" required>
+        <input type="text" id="prod-price" placeholder="Cena (např. 490 Kč)">
+      </div>
+      <div class="form-row">
+        <select id="prod-category" required>
+          <option value="" disabled selected>-- Vyberte kategorii --</option>
+          <option value="potraviny">🥖 Potraviny</option>
+          <option value="rybarske">🎣 Rybářské potřeby</option>
+        </select>
+        <input type="file" id="prod-image" accept="image/*" required>
+      </div>
+      <textarea id="prod-desc" placeholder="Detailní popis produktu..." rows="3" required></textarea>
+      
+      <button type="submit" id="save-btn" class="btn-primary">Uložit produkt</button>
+    </form>
+  </section>
+
+  <!-- Hlavní mřížka produktů -->
+  <main>
+    <div id="products-grid" class="grid">
+      <p class="loading">Načítám aktuální nabídku...</p>
+    </div>
+  </main>
+
+  <!-- MODAL: Přihlášení -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Přihlášení prodejce</h3>
+      <input type="password" id="admin-password" placeholder="Zadejte heslo">
+      <div class="modal-actions">
+        <button onclick="closeLoginModal()" class="btn-secondary">Zrušit</button>
+        <button onclick="verifyPassword()" class="btn-primary">Přihlásit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Úprava existujícího produktu -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>✏️ Úprava produktu</h3>
+      <form id="edit-product-form" onsubmit="handleUpdateProduct(event)">
+        <input type="hidden" id="edit-prod-id">
+        <input type="hidden" id="edit-prod-image-path">
+        
+        <input type="text" id="edit-prod-title" required>
+        <div class="form-row">
+          <input type="text" id="edit-prod-price">
+          <select id="edit-prod-category" required>
+            <option value="potraviny">🥖 Potraviny</option>
+            <option value="rybarske">🎣 Rybářské potřeby</option>
+          </select>
+        </div>
+        <textarea id="edit-prod-desc" rows="3" required></textarea>
+        
+        <label>Změnit fotku (volitelné):</label>
+        <input type="file" id="edit-prod-image" accept="image/*">
+        
+        <div class="modal-actions">
+          <button type="button" onclick="closeEditModal()" class="btn-secondary">Zrušit</button>
+          <button type="submit" id="update-btn" class="btn-primary">Uložit změny</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
