@@ -1,62 +1,90 @@
 const SUPABASE_URL = 'TVOJE_SUPABASE_URL';
 const SUPABASE_KEY = 'TVŮJ_SUPABASE_ANON_KEY';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const ADMIN_PASSWORD = "heslo"; // Změň podle potřeby
+const ADMIN_PASSWORD = "chlebakk"; // Nové heslo dle požadavků
 
 let isAdmin = false;
 let currentProducts = [];
 let activeCategory = 'all';
 let searchQuery = '';
 
-// === AUTH a ADMIN MÓD === (Stejné jako minule)
+// === AUTH a ADMIN MÓD ===
 function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-function verifyPassword() {
-  if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {
-    isAdmin = true; closeLoginModal(); updateUIForAdmin(); renderProducts();
-  } else { alert("Nesprávné heslo!"); }
+function closeLoginModal() { 
+  document.getElementById('login-modal').classList.add('hidden'); 
+  document.getElementById('admin-password').value = '';
 }
+
+function verifyPassword() {
+  const input = document.getElementById('admin-password');
+  if (input.value === ADMIN_PASSWORD) {
+    isAdmin = true; 
+    closeLoginModal(); 
+    updateUIForAdmin(); 
+    renderProducts();
+  } else { 
+    alert("Nesprávné heslo! Přístup odepřen."); 
+    input.value = '';
+  }
+}
+
 function logoutAdmin() { isAdmin = false; updateUIForAdmin(); renderProducts(); }
+
 function updateUIForAdmin() {
   document.getElementById('admin-panel').classList.toggle('hidden', !isAdmin);
   const btn = document.getElementById('admin-auth-btn');
-  btn.innerText = isAdmin ? '🔓 Odhlásit prodejce' : '🔐 Prodejce';
-  btn.onclick = isAdmin ? logoutAdmin : openLoginModal;
+  if (isAdmin) {
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg><span>Odhlásit se</span>`;
+    btn.onclick = logoutAdmin;
+  } else {
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span>Prodejce</span>`;
+    btn.onclick = openLoginModal;
+  }
 }
 
 // === VYHLEDÁVÁNÍ A FILTRY ===
 function setCategory(cat) {
   activeCategory = cat;
-  // Aktualizace vzhledu tlačítek
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.cat === cat);
   });
-  renderProducts(); // Znovu vykreslí produkty podle filtru
+  renderProducts();
 }
 
 function handleSearch() {
   searchQuery = document.getElementById('search-input').value.toLowerCase();
-  renderProducts(); // Filtruje v reálném čase podle textu
+  renderProducts();
 }
 
 // === NAČÍTÁNÍ A VYKRESLOVÁNÍ ===
 async function loadProducts() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Načítám aktuální nabídku...</p>
+    </div>`;
+
   const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-  if (error) { console.error(error); return; }
+  if (error) { 
+    console.error(error);
+    grid.innerHTML = '<p class="loading-state" style="color: red;">Chyba při načítání dat. Zkuste obnovit stránku.</p>';
+    return; 
+  }
+  
   currentProducts = data;
   renderProducts();
 }
 
 function getCategoryLabel(cat) {
-  if (cat === 'potraviny') return '🥖 Potraviny';
-  if (cat === 'rybarske') return '🎣 Rybářské potřeby';
+  if (cat === 'potraviny') return 'Potraviny';
+  if (cat === 'rybarske') return 'Rybářské potřeby';
   return 'Ostatní';
 }
 
 function renderProducts() {
   const grid = document.getElementById('products-grid');
   
-  // Aplikace filtrů a vyhledávání
   let filtered = currentProducts;
   if (activeCategory !== 'all') {
     filtered = filtered.filter(p => p.category === activeCategory);
@@ -69,25 +97,29 @@ function renderProducts() {
   }
 
   if (filtered.length === 0) {
-    grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; padding: 40px; color: #6b7280;">Nebyly nalezeny žádné produkty.</p>';
+    grid.innerHTML = `
+      <div class="loading-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <p>Žádné produkty neodpovídají vašemu hledání.</p>
+      </div>`;
     return;
   }
 
   grid.innerHTML = filtered.map(p => `
     <div class="card">
-      <div style="position: relative;">
-        <img src="${p.image_url}" alt="${escapeHtml(p.title)}">
+      <div class="card-img-wrapper">
+        <img src="${p.image_url}" alt="${escapeHtml(p.title)}" loading="lazy">
         <span class="card-badge">${getCategoryLabel(p.category)}</span>
       </div>
       <div class="card-body">
-        <div class="card-title">${escapeHtml(p.title)}</div>
-        <div class="card-desc">${escapeHtml(p.description)}</div>
-        <div class="card-price">${p.price ? escapeHtml(p.price) : ''}</div>
+        <h3 class="card-title">${escapeHtml(p.title)}</h3>
+        <p class="card-desc">${escapeHtml(p.description)}</p>
+        <div class="card-price">${p.price ? escapeHtml(p.price) : 'Cena na dotaz'}</div>
       </div>
       ${isAdmin ? `
         <div class="card-actions">
-          <button class="btn-edit" onclick="openEditModal('${p.id}')">✏️ Upravit</button>
-          <button class="btn-delete" onclick="deleteProduct('${p.id}', '${p.image_path}')">🗑️</button>
+          <button class="btn-edit" onclick="openEditModal('${p.id}')">Upravit</button>
+          <button class="btn-delete" onclick="deleteProduct('${p.id}', '${p.image_path}')">Smazat</button>
         </div>
       ` : ''}
     </div>
@@ -97,7 +129,9 @@ function renderProducts() {
 // === PŘIDÁNÍ PRODUKTU ===
 async function handleAddProduct(event) {
   event.preventDefault();
-  const btn = document.getElementById('save-btn'); btn.innerText = "Ukládám..."; btn.disabled = true;
+  const btn = document.getElementById('save-btn'); 
+  btn.innerText = "Ukládám..."; 
+  btn.disabled = true;
 
   try {
     const file = document.getElementById('prod-image').files[0];
@@ -107,7 +141,6 @@ async function handleAddProduct(event) {
     await supabase.storage.from('product-images').upload(filePath, file);
     const { data: urlData } = supabase.storage.from('product-images').getPublicUrl(filePath);
 
-    // Přidáno uložení kategorie
     await supabase.from('products').insert([{
       title: document.getElementById('prod-title').value,
       price: document.getElementById('prod-price').value,
@@ -118,8 +151,13 @@ async function handleAddProduct(event) {
     }]);
 
     document.getElementById('add-product-form').reset();
-    await loadProducts(); // Načte znovu vše z DB
-  } catch (err) { alert(err.message); } finally { btn.innerText = "Uložit produkt"; btn.disabled = false; }
+    await loadProducts();
+  } catch (err) { 
+    alert("Chyba při ukládání: " + err.message); 
+  } finally { 
+    btn.innerText = "Přidat do katalogu"; 
+    btn.disabled = false; 
+  }
 }
 
 // === EDITACE A MAZÁNÍ ===
@@ -139,7 +177,9 @@ function closeEditModal() { document.getElementById('edit-modal').classList.add(
 
 async function handleUpdateProduct(event) {
   event.preventDefault();
-  const btn = document.getElementById('update-btn'); btn.innerText = "Ukládám..."; btn.disabled = true;
+  const btn = document.getElementById('update-btn'); 
+  btn.innerText = "Ukládám..."; 
+  btn.disabled = true;
 
   try {
     const id = document.getElementById('edit-prod-id').value;
@@ -160,22 +200,39 @@ async function handleUpdateProduct(event) {
       description: document.getElementById('edit-prod-desc').value,
       category: document.getElementById('edit-prod-category').value
     };
-    if (imageUrl) { updates.image_url = imageUrl; updates.image_path = imagePath; }
+    
+    if (imageUrl) { 
+      updates.image_url = imageUrl; 
+      updates.image_path = imagePath; 
+    }
 
     await supabase.from('products').update(updates).eq('id', id);
     closeEditModal();
     await loadProducts();
-  } catch(err) { alert(err.message); } finally { btn.innerText = "Uložit změny"; btn.disabled = false; }
+  } catch(err) { 
+    alert("Chyba při úpravě: " + err.message); 
+  } finally { 
+    btn.innerText = "Uložit změny"; 
+    btn.disabled = false; 
+  }
 }
 
 async function deleteProduct(id, imagePath) {
-  if (!confirm("Smazat produkt?")) return;
-  if (imagePath) await supabase.storage.from('product-images').remove([imagePath]);
-  await supabase.from('products').delete().eq('id', id);
-  await loadProducts();
+  if (!confirm("Opravdu chcete tento produkt smazat? Tato akce je nevratná.")) return;
+  
+  try {
+    if (imagePath) await supabase.storage.from('product-images').remove([imagePath]);
+    await supabase.from('products').delete().eq('id', id);
+    await loadProducts();
+  } catch (err) {
+    alert("Chyba při mazání: " + err.message);
+  }
 }
 
-function escapeHtml(str) { return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+function escapeHtml(str) { 
+  if (!str) return '';
+  return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); 
+}
 
 // START
 loadProducts();
