@@ -4,31 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moderní Katalog</title>
-  <!-- Profesionální font Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- Hlavička (Sticky Glassmorphism) -->
+  <!-- Hlavička -->
   <header>
     <div class="header-container">
       <div class="header-top">
         <h1>Katalog<span>.</span></h1>
         <button id="admin-auth-btn" onclick="openLoginModal()" class="btn-auth">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          <span>Prodejce</span>
+          <span>🔐 Prodejce</span>
         </button>
       </div>
 
       <!-- Filtry a Vyhledávání -->
       <div class="controls-bar">
         <div class="search-box">
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="search-input" placeholder="Hledat produkt podle názvu nebo popisu..." oninput="handleSearch()">
+          <input type="text" id="search-input" placeholder="Hledat produkt podle názvu..." oninput="handleSearch()">
         </div>
         <div class="category-filters">
           <button class="filter-btn active" data-cat="all" onclick="setCategory('all')">Vše</button>
@@ -40,7 +36,7 @@
   </header>
 
   <main class="container">
-    <!-- ADMIN PANEL: Přidání nového produktu -->
+    <!-- ADMIN PANEL -->
     <section id="admin-panel" class="admin-panel hidden">
       <div class="admin-header">
         <h2>Přidat nový produkt</h2>
@@ -49,12 +45,12 @@
       <form id="add-product-form" onsubmit="handleAddProduct(event)">
         <div class="form-row">
           <div class="input-group">
-            <label for="prod-title">Název produktu</label>
-            <input type="text" id="prod-title" placeholder="Např. Kaprový prut" required>
+            <label for="prod-title">Název</label>
+            <input type="text" id="prod-title" required>
           </div>
           <div class="input-group">
             <label for="prod-price">Cena</label>
-            <input type="text" id="prod-price" placeholder="Např. 490 Kč">
+            <input type="text" id="prod-price">
           </div>
         </div>
         <div class="form-row">
@@ -72,33 +68,25 @@
           </div>
         </div>
         <div class="input-group">
-          <label for="prod-desc">Popis produktu</label>
-          <textarea id="prod-desc" placeholder="Detailní popis vlastností..." rows="3" required></textarea>
+          <label for="prod-desc">Popis</label>
+          <textarea id="prod-desc" rows="3" required></textarea>
         </div>
-        
         <button type="submit" id="save-btn" class="btn-primary w-full">Přidat do katalogu</button>
       </form>
     </section>
 
-    <!-- Hlavní mřížka produktů -->
-    <div id="products-grid" class="grid">
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <p>Načítám aktuální nabídku...</p>
-      </div>
-    </div>
+    <!-- Mřížka produktů -->
+    <div id="products-grid" class="grid"></div>
   </main>
 
-  <!-- MODAL: Přihlášení -->
+  <!-- MODALY -->
   <div id="login-modal" class="modal hidden">
     <div class="modal-backdrop" onclick="closeLoginModal()"></div>
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Přístup pro prodejce</h3>
-      </div>
+      <h3>Přístup pro prodejce</h3>
       <div class="input-group mt-4">
-        <label for="admin-password">Heslo</label>
-        <input type="password" id="admin-password" placeholder="Zadejte tajné heslo">
+        <label>Heslo</label>
+        <input type="password" id="admin-password">
       </div>
       <div class="modal-actions">
         <button onclick="closeLoginModal()" class="btn-secondary">Zrušit</button>
@@ -107,54 +95,36 @@
     </div>
   </div>
 
-  <!-- MODAL: Úprava existujícího produktu -->
   <div id="edit-modal" class="modal hidden">
     <div class="modal-backdrop" onclick="closeEditModal()"></div>
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Úprava produktu</h3>
-      </div>
+      <h3>Úprava produktu</h3>
       <form id="edit-product-form" onsubmit="handleUpdateProduct(event)" class="mt-4">
         <input type="hidden" id="edit-prod-id">
         <input type="hidden" id="edit-prod-image-path">
         
-        <div class="input-group">
-          <label for="edit-prod-title">Název produktu</label>
-          <input type="text" id="edit-prod-title" required>
-        </div>
-
+        <div class="input-group"><label>Název</label><input type="text" id="edit-prod-title" required></div>
         <div class="form-row">
+          <div class="input-group"><label>Cena</label><input type="text" id="edit-prod-price"></div>
           <div class="input-group">
-            <label for="edit-prod-price">Cena</label>
-            <input type="text" id="edit-prod-price">
-          </div>
-          <div class="input-group">
-            <label for="edit-prod-category">Kategorie</label>
+            <label>Kategorie</label>
             <select id="edit-prod-category" required>
               <option value="potraviny">Potraviny</option>
               <option value="rybarske">Rybářské potřeby</option>
             </select>
           </div>
         </div>
-
-        <div class="input-group">
-          <label for="edit-prod-desc">Popis produktu</label>
-          <textarea id="edit-prod-desc" rows="3" required></textarea>
-        </div>
-        
-        <div class="input-group">
-          <label for="edit-prod-image">Nová fotografie (volitelné)</label>
-          <input type="file" id="edit-prod-image" accept="image/*" class="file-input">
-        </div>
+        <div class="input-group"><label>Popis</label><textarea id="edit-prod-desc" rows="3" required></textarea></div>
+        <div class="input-group"><label>Nová fotka</label><input type="file" id="edit-prod-image" accept="image/*" class="file-input"></div>
         
         <div class="modal-actions">
           <button type="button" onclick="closeEditModal()" class="btn-secondary">Zrušit</button>
-          <button type="submit" id="update-btn" class="btn-primary">Uložit změny</button>
+          <button type="submit" id="update-btn" class="btn-primary">Uložit</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
