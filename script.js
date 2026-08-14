@@ -2,20 +2,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA2yXEzcYQYsHOoIhARz7uqo3LJSrLVNUs",
-  authDomain: "clebikshop.firebaseapp.com",
-  projectId: "clebikshop",
-  storageBucket: "clebikshop.firebasestorage.app",
-  messagingSenderId: "129581121422",
-  appId: "1:129581121422:web:a362d35549d02b5a11eedf",
-  measurementId: "G-S5J1YKJ28J"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
+// ==========================================
+// 1. OVLÁDÁNÍ UŽIVATELSKÉHO ROZHRANÍ (KLIKÁNÍ)
+// ==========================================
 const ADMIN_PASSWORD = "chlebakk";
 let isAdmin = false;
 let currentProducts = [];
@@ -26,6 +15,7 @@ window.openLoginModal = () => document.getElementById('login-modal').classList.r
 window.closeLoginModal = () => { document.getElementById('login-modal').classList.add('hidden'); document.getElementById('admin-password').value = ''; }
 window.logoutAdmin = () => { isAdmin = false; updateUIForAdmin(); renderProducts(); }
 window.closeEditModal = () => document.getElementById('edit-modal').classList.add('hidden');
+
 window.setCategory = (cat) => {
   activeCategory = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
@@ -35,20 +25,55 @@ window.handleSearch = () => { searchQuery = document.getElementById('search-inpu
 
 window.verifyPassword = () => {
   if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {
-    isAdmin = true; window.closeLoginModal(); updateUIForAdmin(); renderProducts();
-  } else { alert("Nesprávné heslo!"); document.getElementById('admin-password').value = ''; }
+    isAdmin = true; 
+    window.closeLoginModal(); 
+    updateUIForAdmin(); 
+    renderProducts();
+  } else { 
+    alert("Nesprávné heslo!"); 
+    document.getElementById('admin-password').value = ''; 
+  }
 }
 
 function updateUIForAdmin() {
+  // Zobrazí nebo skryje admin panel
   document.getElementById('admin-panel').classList.toggle('hidden', !isAdmin);
   const btn = document.getElementById('admin-auth-btn');
   btn.innerHTML = isAdmin ? `<span>🔓 Odhlásit se</span>` : `<span>🔐 Prodejce</span>`;
   btn.onclick = isAdmin ? window.logoutAdmin : window.openLoginModal;
 }
 
+// ==========================================
+// 2. NASTAVENÍ FIREBASE A DATABÁZE
+// ==========================================
+const firebaseConfig = {
+  apiKey: "AIzaSyA2yXEzcYQYsHOoIhARz7uqo3LJSrLVNUs",
+  authDomain: "clebikshop.firebaseapp.com",
+  projectId: "clebikshop",
+  storageBucket: "clebikshop.firebasestorage.app",
+  messagingSenderId: "129581121422",
+  appId: "1:129581121422:web:a362d35549d02b5a11eedf",
+  measurementId: "G-S5J1YKJ28J"
+};
+
+let db, storage;
+
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  storage = getStorage(app);
+  loadProducts(); // Načte produkty hned při zapnutí
+} catch (error) {
+  console.error("Chyba Firebase:", error);
+  document.getElementById('products-grid').innerHTML = '<p style="color:red; text-align:center; width: 100%;">Nepodařilo se připojit k databázi.</p>';
+}
+
+// ==========================================
+// 3. FUNKCE PRO ZOBRAZENÍ A ÚPRAVU DAT
+// ==========================================
 async function loadProducts() {
   const grid = document.getElementById('products-grid');
-  grid.innerHTML = '<p style="text-align:center; width: 100%;">Načítám data...</p>';
+  grid.innerHTML = '<p style="text-align:center; width: 100%;">Načítám katalog...</p>';
 
   try {
     const q = query(collection(db, "products"), orderBy("created_at", "desc"));
@@ -57,13 +82,14 @@ async function loadProducts() {
     renderProducts();
   } catch (error) {
     console.error("Chyba načítání:", error);
-    grid.innerHTML = '<p style="color:red; text-align:center; width:100%;">Chyba při načítání dat.</p>';
+    grid.innerHTML = '<p style="color:red; text-align:center; width:100%;">Zkontroluj pravidla Firestore (přístup odepřen).</p>';
   }
 }
 
 function renderProducts() {
   const grid = document.getElementById('products-grid');
   let filtered = currentProducts;
+  
   if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
   if (searchQuery) filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery));
 
@@ -117,7 +143,7 @@ window.handleAddProduct = async (event) => {
 
     document.getElementById('add-product-form').reset();
     await loadProducts();
-  } catch (err) { alert("Chyba: " + err.message); } 
+  } catch (err) { alert("Chyba při přidávání: " + err.message); } 
   finally { btn.innerText = "Přidat do katalogu"; btn.disabled = false; }
 }
 
@@ -172,5 +198,3 @@ window.deleteProduct = async (id, imagePath) => {
     await loadProducts();
   } catch (err) { alert("Chyba mazání: " + err.message); }
 }
-
-loadProducts();
