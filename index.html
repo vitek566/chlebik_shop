@@ -3,15 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moderní Katalog</title>
+  <title>Moderní Katalog - Clebikshop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  
+  <!-- ====== CSS STYLY ====== -->
+  <style>
+    :root {
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --danger: #ef4444;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-family); }
+    body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.5; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .mt-4 { margin-top: 1rem; }
+    .w-full { width: 100%; }
+
+    /* SKRÝVÁNÍ ELEMENTŮ */
+    .hidden { display: none !important; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 15px 20px;
+      margin-bottom: 40px;
+    }
+    .header-container { max-width: 1200px; margin: 0 auto; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header-top h1 { font-size: 1.75rem; font-weight: 800; color: var(--text-main); }
+    .header-top h1 span { color: var(--primary); }
+
+    .controls-bar { display: flex; flex-direction: column; gap: 15px; }
+    @media(min-width: 768px) {
+      .controls-bar { flex-direction: row; align-items: center; justify-content: space-between; }
+      .search-box { width: 400px; }
+    }
+
+    .search-box input {
+      width: 100%; padding: 12px 16px;
+      font-size: 0.95rem; background: var(--bg-body);
+      border: 1px solid var(--border-color); border-radius: 9999px;
+      outline: none; transition: all 0.2s ease;
+    }
+    .search-box input:focus { border-color: var(--primary); background: var(--bg-surface); }
+
+    .category-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 8px 18px; font-size: 0.9rem; font-weight: 500;
+      border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-muted);
+      border-radius: 9999px; cursor: pointer; transition: all 0.2s ease;
+    }
+    .filter-btn.active { background: var(--text-main); border-color: var(--text-main); color: #fff; }
+
+    button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; transition: all 0.2s ease; outline: none; }
+    .btn-auth { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 9999px; font-weight: 500; cursor: pointer; }
+    .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #f1f5f9; color: #334155; border: none; padding: 10px 20px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+
+    .admin-panel {
+      background: var(--bg-surface); padding: 30px; border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md); border-top: 4px solid var(--primary); margin-bottom: 40px;
+    }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .btn-logout { background: transparent; border: none; color: var(--danger); font-weight: 600; cursor: pointer; }
+
+    .form-row { display: flex; gap: 20px; margin-bottom: 15px; flex-wrap: wrap; }
+    .form-row > * { flex: 1; min-width: 200px; }
+    .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+    .input-group label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+    .input-group input, .input-group select, .input-group textarea {
+      width: 100%; padding: 10px 14px; font-size: 0.95rem; border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); outline: none; background: #f8fafc;
+    }
+    .file-input { padding: 8px !important; background: #fff !important; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding-bottom: 60px; }
+    .card {
+      background: var(--bg-surface); border-radius: var(--radius-md); overflow: hidden;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);
+      display: flex; flex-direction: column; transition: transform 0.3s ease;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .card-img-wrapper { position: relative; width: 100%; height: 220px; background: #f1f5f9; }
+    .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    .card-badge { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.95); padding: 6px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+    .card-body { padding: 24px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+    .card-title { font-size: 1.15rem; font-weight: 700; }
+    .card-desc { color: var(--text-muted); font-size: 0.9rem; flex-grow: 1; }
+    .card-price { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+
+    .card-actions { display: flex; gap: 10px; padding: 0 24px 24px 24px; }
+    .btn-edit { flex: 1; background: #f8fafc; border: 1px solid var(--border-color); padding: 8px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+    .btn-delete { flex: 1; background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; padding: 8px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
+
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: flex; justify-content: center; align-items: center; }
+    .modal-backdrop { position: absolute; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.4); }
+    .modal-content { position: relative; background: var(--bg-surface); padding: 32px; border-radius: var(--radius-lg); width: 90%; max-width: 500px; box-shadow: var(--shadow-lg); }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px; }
+  </style>
 </head>
 <body>
 
-  <!-- Hlavička -->
+  <!-- ====== HTML STRUKTURA ====== -->
   <header>
     <div class="header-container">
       <div class="header-top">
@@ -21,7 +132,6 @@
         </button>
       </div>
 
-      <!-- Filtry a Vyhledávání -->
       <div class="controls-bar">
         <div class="search-box">
           <input type="text" id="search-input" placeholder="Hledat produkt podle názvu..." oninput="handleSearch()">
@@ -125,6 +235,201 @@
     </div>
   </div>
 
-  <script type="module" src="app.js"></script>
+  <!-- ====== JAVASCRIPT LOGIKA ====== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
+
+    // 1. OVLÁDÁNÍ UŽIVATELSKÉHO ROZHRANÍ
+    const ADMIN_PASSWORD = "chlebakk";
+    let isAdmin = false;
+    let currentProducts = [];
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    window.openLoginModal = () => document.getElementById('login-modal').classList.remove('hidden');
+    window.closeLoginModal = () => { document.getElementById('login-modal').classList.add('hidden'); document.getElementById('admin-password').value = ''; }
+    window.logoutAdmin = () => { isAdmin = false; updateUIForAdmin(); renderProducts(); }
+    window.closeEditModal = () => document.getElementById('edit-modal').classList.add('hidden');
+
+    window.setCategory = (cat) => {
+      activeCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+      renderProducts();
+    }
+    window.handleSearch = () => { searchQuery = document.getElementById('search-input').value.toLowerCase(); renderProducts(); }
+
+    window.verifyPassword = () => {
+      if (document.getElementById('admin-password').value === ADMIN_PASSWORD) {
+        isAdmin = true; 
+        window.closeLoginModal(); 
+        updateUIForAdmin(); 
+        renderProducts();
+      } else { 
+        alert("Nesprávné heslo!"); 
+        document.getElementById('admin-password').value = ''; 
+      }
+    }
+
+    function updateUIForAdmin() {
+      document.getElementById('admin-panel').classList.toggle('hidden', !isAdmin);
+      const btn = document.getElementById('admin-auth-btn');
+      btn.innerHTML = isAdmin ? `<span>🔓 Odhlásit se</span>` : `<span>🔐 Prodejce</span>`;
+      btn.onclick = isAdmin ? window.logoutAdmin : window.openLoginModal;
+    }
+
+    // 2. NASTAVENÍ FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2yXEzcYQYsHOoIhARz7uqo3LJSrLVNUs",
+      authDomain: "clebikshop.firebaseapp.com",
+      projectId: "clebikshop",
+      storageBucket: "clebikshop.firebasestorage.app",
+      messagingSenderId: "129581121422",
+      appId: "1:129581121422:web:a362d35549d02b5a11eedf",
+      measurementId: "G-S5J1YKJ28J"
+    };
+
+    let db, storage;
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      storage = getStorage(app);
+      loadProducts();
+    } catch (error) {
+      console.error("Chyba Firebase:", error);
+      document.getElementById('products-grid').innerHTML = '<p style="color:red; text-align:center; width: 100%;">Nepodařilo se připojit k databázi.</p>';
+    }
+
+    // 3. FUNKCE PRO ZOBRAZENÍ A ÚPRAVU DAT
+    async function loadProducts() {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '<p style="text-align:center; width: 100%;">Načítám katalog...</p>';
+
+      try {
+        const q = query(collection(db, "products"), orderBy("created_at", "desc"));
+        const querySnapshot = await getDocs(q);
+        currentProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderProducts();
+      } catch (error) {
+        console.error("Chyba načítání:", error);
+        grid.innerHTML = '<p style="color:red; text-align:center; width:100%;">Zkontroluj pravidla Firestore (přístup odepřen).</p>';
+      }
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      let filtered = currentProducts;
+      
+      if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+      if (searchQuery) filtered = filtered.filter(p => p.title.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery));
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; width: 100%;">Žádné produkty k zobrazení.</p>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="card">
+          <div class="card-img-wrapper">
+            <img src="${p.image_url}" alt="Foto">
+            <span class="card-badge">${p.category === 'potraviny' ? 'Potraviny' : 'Rybářské potřeby'}</span>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">${p.title}</h3>
+            <p class="card-desc">${p.description}</p>
+            <div class="card-price">${p.price || 'Cena na dotaz'}</div>
+          </div>
+          ${isAdmin ? `
+            <div class="card-actions">
+              <button class="btn-edit" onclick="openEditModal('${p.id}')">Upravit</button>
+              <button class="btn-delete" onclick="deleteProduct('${p.id}', '${p.image_path}')">Smazat</button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    window.handleAddProduct = async (event) => {
+      event.preventDefault();
+      const btn = document.getElementById('save-btn'); btn.innerText = "Ukládám..."; btn.disabled = true;
+
+      try {
+        const file = document.getElementById('prod-image').files[0];
+        const filePath = `products/${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, filePath);
+        
+        await uploadBytes(fileRef, file);
+        const imageUrl = await getDownloadURL(fileRef);
+
+        await addDoc(collection(db, "products"), {
+          title: document.getElementById('prod-title').value,
+          price: document.getElementById('prod-price').value,
+          description: document.getElementById('prod-desc').value,
+          category: document.getElementById('prod-category').value,
+          image_url: imageUrl,
+          image_path: filePath,
+          created_at: Date.now()
+        });
+
+        document.getElementById('add-product-form').reset();
+        await loadProducts();
+      } catch (err) { alert("Chyba při přidávání: " + err.message); } 
+      finally { btn.innerText = "Přidat do katalogu"; btn.disabled = false; }
+    }
+
+    window.openEditModal = (id) => {
+      const p = currentProducts.find(x => x.id === id);
+      if(!p) return;
+      document.getElementById('edit-prod-id').value = p.id;
+      document.getElementById('edit-prod-image-path').value = p.image_path;
+      document.getElementById('edit-prod-title').value = p.title;
+      document.getElementById('edit-prod-price').value = p.price || '';
+      document.getElementById('edit-prod-desc').value = p.description;
+      document.getElementById('edit-prod-category').value = p.category || 'potraviny';
+      document.getElementById('edit-modal').classList.remove('hidden');
+    }
+
+    window.handleUpdateProduct = async (event) => {
+      event.preventDefault();
+      const btn = document.getElementById('update-btn'); btn.innerText = "Ukládám..."; btn.disabled = true;
+
+      try {
+        const id = document.getElementById('edit-prod-id').value;
+        let imagePath = document.getElementById('edit-prod-image-path').value;
+        const newFile = document.getElementById('edit-prod-image').files[0];
+        const updates = {
+          title: document.getElementById('edit-prod-title').value,
+          price: document.getElementById('edit-prod-price').value,
+          description: document.getElementById('edit-prod-desc').value,
+          category: document.getElementById('edit-prod-category').value
+        };
+
+        if (newFile) {
+          if (imagePath) await deleteObject(ref(storage, imagePath)).catch(e => console.log(e));
+          imagePath = `products/${Date.now()}_${newFile.name}`;
+          const fileRef = ref(storage, imagePath);
+          await uploadBytes(fileRef, newFile);
+          updates.image_url = await getDownloadURL(fileRef);
+          updates.image_path = imagePath;
+        }
+
+        await updateDoc(doc(db, "products", id), updates);
+        window.closeEditModal();
+        await loadProducts();
+      } catch(err) { alert("Chyba: " + err.message); } 
+      finally { btn.innerText = "Uložit"; btn.disabled = false; }
+    }
+
+    window.deleteProduct = async (id, imagePath) => {
+      if (!confirm("Smazat tento produkt?")) return;
+      try {
+        if (imagePath) await deleteObject(ref(storage, imagePath)).catch(e => console.log(e));
+        await deleteDoc(doc(db, "products", id));
+        await loadProducts();
+      } catch (err) { alert("Chyba mazání: " + err.message); }
+    }
+  </script>
 </body>
 </html>
