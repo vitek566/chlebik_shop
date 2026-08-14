@@ -5,49 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Katalog | Clebikshop</title>
   
-  <!-- Načtení moderního fontu -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- ========================================== -->
-  <!-- 1. CSS STYLY (PROFESIONÁLNÍ A RESPONZIVNÍ) -->
-  <!-- ========================================== -->
   <style>
     :root {
-      /* Paleta barev - Moderní Slate a Indigo */
       --bg-page: #f8fafc;
       --bg-card: #ffffff;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
-      
       --color-primary: #4f46e5;
       --color-primary-hover: #4338ca;
       --color-danger: #ef4444;
-      --color-danger-hover: #dc2626;
-      
-      /* Stíny a zaoblení */
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       --radius-sm: 8px;
       --radius-md: 12px;
-      
-      /* Plynulé animace */
       --transition-fast: 0.2s ease;
     }
 
-    /* Reset a základní nastavení */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Inter', sans-serif; background: var(--bg-page); color: var(--text-main); line-height: 1.6; -webkit-font-smoothing: antialiased; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
     
-    /* Pomocné třídy */
     .hidden { display: none !important; }
     .w-full { width: 100%; }
     
-    /* Hlavička a Navigace */
     .site-header { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 20px 0; margin-bottom: 40px; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .brand { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.025em; }
@@ -64,7 +50,6 @@
     .btn-filter:hover { border-color: var(--text-muted); }
     .btn-filter.active { background: var(--text-main); color: #fff; border-color: var(--text-main); }
 
-    /* Základní tlačítka */
     button { font-family: inherit; cursor: pointer; outline: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px; transition: var(--transition-fast); }
     .btn-auth { background: transparent; border: 1px solid var(--border); padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 0.9rem; }
     .btn-auth:hover { background: var(--bg-page); }
@@ -74,23 +59,19 @@
     .btn-secondary { background: #f1f5f9; color: var(--text-main); border: none; padding: 12px 24px; border-radius: var(--radius-sm); font-weight: 600; }
     .btn-secondary:hover { background: #e2e8f0; }
 
-    /* Admin Panel (Zabezpečená zóna) */
     .admin-zone { background: var(--bg-card); padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); border-top: 4px solid var(--color-primary); margin-bottom: 40px; }
     .admin-zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
     .admin-zone-header h2 { font-size: 1.25rem; font-weight: 700; }
     .btn-text-danger { background: none; border: none; color: var(--color-danger); font-weight: 600; }
     .btn-text-danger:hover { text-decoration: underline; }
 
-    /* Formuláře */
     .form-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px; }
     @media(min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
     .input-field { display: flex; flex-direction: column; gap: 6px; }
     .input-field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
     .input-field input, .input-field select, .input-field textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-page); font-family: inherit; font-size: 0.95rem; outline: none; transition: var(--transition-fast); }
     .input-field input:focus, .input-field select:focus, .input-field textarea:focus { border-color: var(--color-primary); background: #fff; }
-    .file-input { padding: 9px !important; background: #fff !important; cursor: pointer; }
 
-    /* Mřížka Produktů a Karty */
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding-bottom: 80px; }
     .product-card { background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
@@ -110,7 +91,6 @@
     .btn-delete { background: #fef2f2; border: none; padding: 10px; border-radius: var(--radius-sm); font-weight: 600; color: var(--color-danger); }
     .btn-delete:hover { background: #fee2e2; }
 
-    /* Modální okna (Vyskakovací) */
     .modal-overlay { position: fixed; inset: 0; z-index: 100; display: flex; justify-content: center; align-items: center; padding: 20px; }
     .modal-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
     .modal-box { position: relative; background: var(--bg-card); width: 100%; max-width: 500px; padding: 30px; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideUp 0.3s ease-out; }
@@ -123,10 +103,6 @@
 </head>
 <body>
 
-  <!-- ========================================== -->
-  <!-- 2. HTML STRUKTURA                          -->
-  <!-- ========================================== -->
-  
   <header class="site-header">
     <div class="container">
       <div class="header-top">
@@ -147,7 +123,6 @@
 
   <main class="container">
     
-    <!-- ADMIN ZÓNA (Skrytá pro běžné uživatele) -->
     <section id="ui-admin-zone" class="admin-zone hidden">
       <div class="admin-zone-header">
         <h2>Přidat nový produkt</h2>
@@ -173,8 +148,8 @@
             </select>
           </div>
           <div class="input-field">
-            <label>Fotografie (Povinná)</label>
-            <input type="file" id="add-image" accept="image/*" required class="file-input">
+            <label>Odkaz na fotku (URL adresa)</label>
+            <input type="url" id="add-image" required placeholder="https://priklad.cz/foto.jpg">
           </div>
         </div>
         <div class="input-field" style="margin-bottom: 20px;">
@@ -185,14 +160,12 @@
       </form>
     </section>
 
-    <!-- MŘÍŽKA PRODUKTŮ -->
     <div id="ui-products-grid" class="products-grid">
       <div class="status-message">Načítám připojení k serveru...</div>
     </div>
 
   </main>
 
-  <!-- MODÁLNÍ OKNO: PŘIHLÁŠENÍ -->
   <div id="modal-login" class="modal-overlay hidden">
     <div class="modal-backdrop" id="backdrop-login"></div>
     <div class="modal-box">
@@ -208,14 +181,12 @@
     </div>
   </div>
 
-  <!-- MODÁLNÍ OKNO: ÚPRAVA PRODUKTU -->
   <div id="modal-edit" class="modal-overlay hidden">
     <div class="modal-backdrop" id="backdrop-edit"></div>
     <div class="modal-box">
       <h3>Úprava produktu</h3>
       <form id="form-edit-product">
         <input type="hidden" id="edit-id">
-        <input type="hidden" id="edit-image-path">
         
         <div class="form-grid">
           <div class="input-field"><label>Název</label><input type="text" id="edit-title" required></div>
@@ -227,7 +198,7 @@
               <option value="rybarske">Rybářské potřeby</option>
             </select>
           </div>
-          <div class="input-field"><label>Nová fotka (Nepovinné)</label><input type="file" id="edit-image" accept="image/*" class="file-input"></div>
+          <div class="input-field"><label>Odkaz na fotku (URL)</label><input type="url" id="edit-image" required></div>
         </div>
         <div class="input-field" style="margin-bottom: 20px;"><label>Popis</label><textarea id="edit-desc" rows="3" required></textarea></div>
         
@@ -239,17 +210,10 @@
     </div>
   </div>
 
-
-  <!-- ========================================== -->
-  <!-- 3. JAVASCRIPT LOGIKA (BEZPEČNÁ A ROBUSTNÍ) -->
-  <!-- ========================================== -->
   <script type="module">
-    // Import knihoven Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
-    // Globální nastavení a stavy
     const SYSTEM_PASSWORD = "chlebakk";
     const STATE = {
       isAdmin: false,
@@ -258,34 +222,23 @@
       searchQuery: ''
     };
 
-    // Cache DOM elementů pro rychlý přístup
     const DOM = {
       btnAuth: document.getElementById('ui-btn-auth'),
       adminZone: document.getElementById('ui-admin-zone'),
       btnLogout: document.getElementById('ui-btn-logout'),
       productsGrid: document.getElementById('ui-products-grid'),
-      
       filtersWrap: document.getElementById('ui-filters'),
       searchInput: document.getElementById('ui-search'),
-      
-      // Modals
       modalLogin: document.getElementById('modal-login'),
       modalEdit: document.getElementById('modal-edit'),
-      
-      // Buttons inside Modals
       btnLoginConfirm: document.getElementById('btn-login-confirm'),
       btnLoginCancel: document.getElementById('btn-login-cancel'),
       btnEditCancel: document.getElementById('btn-edit-cancel'),
-      
-      // Inputs
       inputPassword: document.getElementById('input-password'),
-      
-      // Forms
       formAdd: document.getElementById('form-add-product'),
       formEdit: document.getElementById('form-edit-product')
     };
 
-    // --- FIREBASE INICIALIZACE ---
     const firebaseConfig = {
       apiKey: "AIzaSyA2yXEzcYQYsHOoIhARz7uqo3LJSrLVNUs",
       authDomain: "clebikshop.firebaseapp.com",
@@ -295,11 +248,9 @@
       appId: "1:129581121422:web:a362d35549d02b5a11eedf"
     };
 
-    let db, storage;
+    let db;
 
-    // --- FUNKCE PRO VYKRESLENÍ (RENDER) ---
     function renderProducts() {
-      // Filtrace dat
       let dataToRender = STATE.products;
       
       if (STATE.currentCategory !== 'all') {
@@ -314,27 +265,24 @@
         );
       }
 
-      // Vykreslení HTML
       if (dataToRender.length === 0) {
         DOM.productsGrid.innerHTML = '<div class="status-message">Žádné produkty neodpovídají hledání.</div>';
         return;
       }
 
       const htmlBlocks = dataToRender.map(product => {
-        // Kontrola jestli jsme admin, abychom vykreslili tlačítka
         const adminButtons = STATE.isAdmin ? `
           <div class="product-actions">
             <button class="btn-edit js-edit-btn" data-id="${product.id}">Upravit</button>
-            <button class="btn-delete js-del-btn" data-id="${product.id}" data-path="${product.image_path}">Smazat</button>
+            <button class="btn-delete js-del-btn" data-id="${product.id}">Smazat</button>
           </div>
         ` : '';
 
-        // Tvorba karty - čistý string
         return `
           <div class="product-card">
             <div class="product-image">
               <span class="badge">${product.category === 'potraviny' ? 'Potraviny' : 'Rybářské'}</span>
-              <img src="${product.image_url}" alt="Foto produktu" loading="lazy">
+              <img src="${product.image_url}" alt="Foto produktu" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Chyba+obrázku'">
             </div>
             <div class="product-info">
               <h3 class="product-title">${product.title}</h3>
@@ -357,10 +305,9 @@
         DOM.adminZone.classList.add('hidden');
         DOM.btnAuth.innerHTML = '🔐 Prodejce';
       }
-      renderProducts(); // Znovu vykreslíme produkty, aby se (ne)ukázala tlačítka
+      renderProducts();
     }
 
-    // --- HLAVNÍ FUNKCE FIREBASE ---
     async function loadDatabase() {
       try {
         DOM.productsGrid.innerHTML = '<div class="status-message">Načítám produkty...</div>';
@@ -379,10 +326,7 @@
       }
     }
 
-    // --- NASTAVENÍ EVENT LISTENERŮ (BEZPEČNÉ KLIKÁNÍ) ---
     function initializeEvents() {
-      
-      // 1. Otevírání / Zavírání přihlašovacího okna
       DOM.btnAuth.addEventListener('click', () => {
         if (STATE.isAdmin) {
           STATE.isAdmin = false;
@@ -392,7 +336,6 @@
         }
       });
 
-      // Zavření modálů přes "Zrušit" nebo kliknutí mimo (backdrop)
       const closeLogin = () => { DOM.modalLogin.classList.add('hidden'); DOM.inputPassword.value = ''; };
       DOM.btnLoginCancel.addEventListener('click', closeLogin);
       document.getElementById('backdrop-login').addEventListener('click', closeLogin);
@@ -401,13 +344,11 @@
       DOM.btnEditCancel.addEventListener('click', closeEdit);
       document.getElementById('backdrop-edit').addEventListener('click', closeEdit);
 
-      // Odhlášení z admin panelu
       DOM.btnLogout.addEventListener('click', () => {
         STATE.isAdmin = false;
         updateSystemUI();
       });
 
-      // 2. Přihlašovací logika
       DOM.btnLoginConfirm.addEventListener('click', () => {
         if (DOM.inputPassword.value === SYSTEM_PASSWORD) {
           STATE.isAdmin = true;
@@ -419,7 +360,6 @@
         }
       });
 
-      // 3. Filtrování a Vyhledávání
       DOM.searchInput.addEventListener('input', (e) => {
         STATE.searchQuery = e.target.value.trim();
         renderProducts();
@@ -427,37 +367,29 @@
 
       DOM.filtersWrap.addEventListener('click', (e) => {
         if (e.target.classList.contains('btn-filter')) {
-          // Změna aktivního tlačítka
           document.querySelectorAll('.btn-filter').forEach(btn => btn.classList.remove('active'));
           e.target.classList.add('active');
-          
-          // Nastavení kategorie a render
           STATE.currentCategory = e.target.getAttribute('data-category');
           renderProducts();
         }
       });
 
-      // 4. Delegování událostí pro dynamická tlačítka u produktů (Upravit/Smazat)
       DOM.productsGrid.addEventListener('click', async (e) => {
-        // Zjištění zda se kliklo na mazací tlačítko
         const delBtn = e.target.closest('.js-del-btn');
         if (delBtn) {
           if (!confirm("Opravdu smazat tento produkt z katalogu?")) return;
           const id = delBtn.getAttribute('data-id');
-          const path = delBtn.getAttribute('data-path');
           
           delBtn.innerText = "Mažu..."; delBtn.disabled = true;
           try {
-            if (path) await deleteObject(ref(storage, path)).catch(err => console.warn("Fotka již smazána", err));
             await deleteDoc(doc(db, "products", id));
-            await loadDatabase(); // Znovu načteme čistá data
+            await loadDatabase();
           } catch(err) {
             alert("Chyba při mazání: " + err.message);
           }
           return;
         }
 
-        // Zjištění zda se kliklo na upravovací tlačítko
         const editBtn = e.target.closest('.js-edit-btn');
         if (editBtn) {
           const id = editBtn.getAttribute('data-id');
@@ -465,10 +397,10 @@
           
           if(productToEdit) {
             document.getElementById('edit-id').value = productToEdit.id;
-            document.getElementById('edit-image-path').value = productToEdit.image_path;
             document.getElementById('edit-title').value = productToEdit.title;
             document.getElementById('edit-price').value = productToEdit.price || '';
             document.getElementById('edit-category').value = productToEdit.category;
+            document.getElementById('edit-image').value = productToEdit.image_url;
             document.getElementById('edit-desc').value = productToEdit.description;
             
             DOM.modalEdit.classList.remove('hidden');
@@ -476,31 +408,18 @@
         }
       });
 
-      // 5. Přidávání nového produktu
       DOM.formAdd.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Zabrání refreshi stránky
+        e.preventDefault();
         const btn = document.getElementById('btn-save-new');
         btn.innerText = "Zpracovávám..."; btn.disabled = true;
 
         try {
-          const fileInput = document.getElementById('add-image');
-          const file = fileInput.files[0];
-          
-          // Bezpečný název souboru
-          const safeFileName = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
-          const filePath = `products/${Date.now()}_${safeFileName}`;
-          
-          const fileRef = ref(storage, filePath);
-          await uploadBytes(fileRef, file);
-          const downloadUrl = await getDownloadURL(fileRef);
-
           await addDoc(collection(db, "products"), {
             title: document.getElementById('add-title').value.trim(),
             price: document.getElementById('add-price').value.trim(),
             category: document.getElementById('add-category').value,
             description: document.getElementById('add-desc').value.trim(),
-            image_url: downloadUrl,
-            image_path: filePath,
+            image_url: document.getElementById('add-image').value.trim(),
             created_at: Date.now()
           });
 
@@ -513,7 +432,6 @@
         }
       });
 
-      // 6. Ukládání upraveného produktu
       DOM.formEdit.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btn-save-edit');
@@ -521,29 +439,14 @@
 
         try {
           const id = document.getElementById('edit-id').value;
-          let imagePath = document.getElementById('edit-image-path').value;
-          const newFile = document.getElementById('edit-image').files[0];
           
           const updates = {
             title: document.getElementById('edit-title').value.trim(),
             price: document.getElementById('edit-price').value.trim(),
             category: document.getElementById('edit-category').value,
-            description: document.getElementById('edit-desc').value.trim()
+            description: document.getElementById('edit-desc').value.trim(),
+            image_url: document.getElementById('edit-image').value.trim()
           };
-
-          // Pokud nahráváme novou fotku
-          if (newFile) {
-            // Zkusíme smazat starou
-            if (imagePath) {
-              await deleteObject(ref(storage, imagePath)).catch(err => console.warn("Původní fotka chybí", err));
-            }
-            const safeFileName = newFile.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
-            imagePath = `products/${Date.now()}_${safeFileName}`;
-            const fileRef = ref(storage, imagePath);
-            await uploadBytes(fileRef, newFile);
-            updates.image_url = await getDownloadURL(fileRef);
-            updates.image_path = imagePath;
-          }
 
           await updateDoc(doc(db, "products", id), updates);
           closeEdit();
@@ -556,13 +459,10 @@
       });
     }
 
-    // --- START APLIKACE ---
     try {
       const app = initializeApp(firebaseConfig);
       db = getFirestore(app);
-      storage = getStorage(app);
       
-      // Spustíme eventy a stáhneme data
       initializeEvents();
       loadDatabase();
     } catch (criticalError) {
