@@ -19,6 +19,7 @@
       --color-primary: #4f46e5;
       --color-primary-hover: #4338ca;
       --color-danger: #ef4444;
+      --color-success: #16a34a;
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -76,12 +77,20 @@
     .product-card { background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
     
+    /* Styly pro vyprodaný produkt */
+    .product-card.sold-out { opacity: 0.7; }
+    .product-card.sold-out .product-image img { filter: grayscale(100%); }
+    .product-card.sold-out .product-title { text-decoration: line-through; color: var(--text-muted); }
+    
     .product-image { position: relative; width: 100%; aspect-ratio: 4/3; background: #f1f5f9; overflow: hidden; }
-    .product-image img { width: 100%; height: 100%; object-fit: cover; }
+    .product-image img { width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease; }
     .badge { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.95); padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
     
     .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-    .product-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+    .product-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
+    .product-stock { font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; }
+    .stock-in { color: var(--color-success); }
+    .stock-out { color: var(--color-danger); }
     .product-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .product-price { font-size: 1.35rem; font-weight: 800; color: var(--color-primary); }
     
@@ -148,9 +157,13 @@
             </select>
           </div>
           <div class="input-field">
-            <label>Odkaz na fotku (URL adresa)</label>
-            <input type="url" id="add-image" required placeholder="https://priklad.cz/foto.jpg">
+            <label>Počet kusů</label>
+            <input type="number" id="add-quantity" required placeholder="Např. 10" min="0" value="1">
           </div>
+        </div>
+        <div class="input-field" style="margin-bottom: 20px;">
+          <label>Odkaz na fotku (URL adresa)</label>
+          <input type="url" id="add-image" required placeholder="https://priklad.cz/foto.jpg">
         </div>
         <div class="input-field" style="margin-bottom: 20px;">
           <label>Popis produktu</label>
@@ -198,8 +211,9 @@
               <option value="rybarske">Rybářské potřeby</option>
             </select>
           </div>
-          <div class="input-field"><label>Odkaz na fotku (URL)</label><input type="url" id="edit-image" required></div>
+          <div class="input-field"><label>Počet kusů</label><input type="number" id="edit-quantity" required min="0"></div>
         </div>
+        <div class="input-field" style="margin-bottom: 20px;"><label>Odkaz na fotku (URL)</label><input type="url" id="edit-image" required></div>
         <div class="input-field" style="margin-bottom: 20px;"><label>Popis</label><textarea id="edit-desc" rows="3" required></textarea></div>
         
         <div class="modal-actions">
@@ -271,6 +285,17 @@
       }
 
       const htmlBlocks = dataToRender.map(product => {
+        // Zjištění počtu kusů (pokud chybí u starých produktů, bere se jako 0)
+        const quantity = parseInt(product.quantity) || 0;
+        const isSoldOut = quantity <= 0;
+        
+        let stockHtml = '';
+        if (isSoldOut) {
+          stockHtml = '<div class="product-stock stock-out">Produkt vyprodán a brzy se naskladní</div>';
+        } else {
+          stockHtml = `<div class="product-stock stock-in">Skladem: ${quantity} ks</div>`;
+        }
+
         const adminButtons = STATE.isAdmin ? `
           <div class="product-actions">
             <button class="btn-edit js-edit-btn" data-id="${product.id}">Upravit</button>
@@ -278,14 +303,16 @@
           </div>
         ` : '';
 
+        // Přidání třídy sold-out podle toho, zda je produkt vyprodaný
         return `
-          <div class="product-card">
+          <div class="product-card ${isSoldOut ? 'sold-out' : ''}">
             <div class="product-image">
               <span class="badge">${product.category === 'potraviny' ? 'Potraviny' : 'Rybářské'}</span>
               <img src="${product.image_url}" alt="Foto produktu" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Chyba+obrázku'">
             </div>
             <div class="product-info">
               <h3 class="product-title">${product.title}</h3>
+              ${stockHtml}
               <p class="product-desc">${product.description}</p>
               <div class="product-price">${product.price || 'Cena na dotaz'}</div>
             </div>
@@ -402,6 +429,7 @@
             document.getElementById('edit-category').value = productToEdit.category;
             document.getElementById('edit-image').value = productToEdit.image_url;
             document.getElementById('edit-desc').value = productToEdit.description;
+            document.getElementById('edit-quantity').value = productToEdit.quantity !== undefined ? productToEdit.quantity : 0;
             
             DOM.modalEdit.classList.remove('hidden');
           }
@@ -418,6 +446,7 @@
             title: document.getElementById('add-title').value.trim(),
             price: document.getElementById('add-price').value.trim(),
             category: document.getElementById('add-category').value,
+            quantity: parseInt(document.getElementById('add-quantity').value) || 0,
             description: document.getElementById('add-desc').value.trim(),
             image_url: document.getElementById('add-image').value.trim(),
             created_at: Date.now()
@@ -444,6 +473,7 @@
             title: document.getElementById('edit-title').value.trim(),
             price: document.getElementById('edit-price').value.trim(),
             category: document.getElementById('edit-category').value,
+            quantity: parseInt(document.getElementById('edit-quantity').value) || 0,
             description: document.getElementById('edit-desc').value.trim(),
             image_url: document.getElementById('edit-image').value.trim()
           };
